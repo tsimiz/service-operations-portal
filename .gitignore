@@ -1,0 +1,6 @@
+target/
+*.class
+maintenance.csv
+.idea/
+*.iml
+.DS_Store

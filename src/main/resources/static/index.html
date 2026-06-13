@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Operations Portal</title>
+<style>
+  :root { --ink:#1a1a1a; --accent:#b2542f; --paper:#f4f2ee; --mut:#5a5a5a; }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:Georgia, 'Times New Roman', serif; background:#fff; color:var(--ink); }
+  header { background:var(--ink); color:#fff; padding:18px 28px; display:flex; align-items:center; gap:12px; }
+  header .diamond { width:11px; height:11px; background:var(--accent); transform:rotate(45deg); }
+  header h1 { font-size:20px; font-weight:normal; }
+  header small { color:#bbb; font-family:Arial, sans-serif; font-size:11px; letter-spacing:2px; margin-left:auto; }
+  main { max-width:960px; margin:28px auto; padding:0 20px; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  section { background:var(--paper); padding:20px; }
+  h2 { font-size:16px; margin-bottom:12px; border-bottom:2px solid var(--accent); padding-bottom:6px; }
+  ul { list-style:none; }
+  li { padding:8px 6px; border-bottom:1px solid #ddd; font-family:Arial, sans-serif; font-size:13px; cursor:pointer; }
+  li:hover { background:#fff; }
+  li.selected { background:#fff; border-left:3px solid var(--accent); }
+  li .meta { color:var(--mut); font-size:11px; display:block; margin-top:2px; }
+  form { margin-top:14px; display:grid; gap:8px; }
+  input, select, textarea { font-family:Arial, sans-serif; font-size:13px; padding:7px; border:1px solid #ccc; background:#fff; }
+  textarea { resize:vertical; min-height:54px; }
+  button { font-family:Arial, sans-serif; font-size:12px; letter-spacing:1px; text-transform:uppercase;
+           background:var(--ink); color:#fff; border:none; padding:9px 14px; cursor:pointer; justify-self:start; }
+  button:hover { background:var(--accent); }
+  #banner { max-width:960px; margin:16px auto 0; padding:0 20px; }
+  #banner .msg { font-family:Arial, sans-serif; font-size:12.5px; padding:10px 14px; display:none; }
+  #banner .error { background:#fdf0ec; color:#7a341d; border-left:3px solid var(--accent); display:block; }
+  .empty { color:var(--mut); font-family:Arial, sans-serif; font-size:12.5px; padding:8px 6px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="diamond"></div>
+  <h1>Service Operations Portal</h1>
+  <small>BLACK BELT CONSULTING &times; AO FINLAND &middot; TRAINING</small>
+</header>
+
+<div id="banner"><div class="msg" id="message"></div></div>
+
+<main>
+  <section>
+    <h2>Assets</h2>
+    <ul id="assetList"><li class="empty">Loading…</li></ul>
+    <form id="assetForm">
+      <input id="assetName" placeholder="Name (e.g. OCT Scanner, Room 3)" required>
+      <select id="assetType">
+        <option value="DEVICE">DEVICE</option>
+        <option value="TOOL">TOOL</option>
+        <option value="VEHICLE">VEHICLE</option>
+      </select>
+      <input id="assetSerial" placeholder="Serial number" required>
+      <button type="submit">Add asset</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Service notes <span id="noteTarget" style="color:var(--mut);font-size:12px"></span></h2>
+    <ul id="noteList"><li class="empty">Select an asset to see its notes.</li></ul>
+    <form id="noteForm" style="display:none">
+      <textarea id="noteText" placeholder="Observation…" required></textarea>
+      <input id="noteAuthor" placeholder="Author" required>
+      <button type="submit">Add note</button>
+    </form>
+  </section>
+</main>
+
+<script>
+let selectedAsset = null;
+
+function show(msg) {
+  const el = document.getElementById('message');
+  if (!msg) { el.className = 'msg'; el.textContent = ''; return; }
+  el.className = 'msg error';
+  el.textContent = msg;
+}
+
+async function api(path, options) {
+  let res;
+  try { res = await fetch(path, options); }
+  catch (e) { throw new Error('Cannot reach the API. Is the application running?'); }
+  if (!res.ok) {
+    let detail = res.status + ' ' + res.statusText;
+    try {
+      const body = await res.json();
+      if (body.detail) detail = body.detail;
+      if (body.errors) detail += ': ' + JSON.stringify(body.errors);
+    } catch (e) { /* not a problem-detail body */ }
+    throw new Error(detail);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+async function loadAssets() {
+  const list = document.getElementById('assetList');
+  try {
+    const assets = await api('/api/assets');
+    show(null);
+    list.innerHTML = '';
+    if (!assets.length) { list.innerHTML = '<li class="empty">No assets yet. Add one below.</li>'; return; }
+    for (const a of assets) {
+      const li = document.createElement('li');
+      li.innerHTML = `<strong>${a.name}</strong><span class="meta">${a.type} &middot; ${a.serialNumber} &middot; ${a.status}</span>`;
+      li.onclick = () => selectAsset(a, li);
+      list.appendChild(li);
+    }
+  } catch (e) {
+    list.innerHTML = '<li class="empty">Nothing here yet.</li>';
+    show('Asset API: ' + e.message + ' (This page comes alive once the Asset API is implemented.)');
+  }
+}
+
+async function selectAsset(asset, li) {
+  selectedAsset = asset;
+  document.querySelectorAll('#assetList li').forEach(n => n.classList.remove('selected'));
+  li.classList.add('selected');
+  document.getElementById('noteTarget').textContent = '· ' + asset.name;
+  document.getElementById('noteForm').style.display = 'grid';
+  await loadNotes();
+}
+
+async function loadNotes() {
+  if (!selectedAsset) return;
+  const list = document.getElementById('noteList');
+  try {
+    const notes = await api(`/api/assets/${selectedAsset.id}/notes`);
+    show(null);
+    list.innerHTML = '';
+    if (!notes.length) { list.innerHTML = '<li class="empty">No notes for this asset yet.</li>'; return; }
+    for (const n of notes) {
+      const li = document.createElement('li');
+      li.style.cursor = 'default';
+      li.innerHTML = `${n.text}<span class="meta">${n.author} &middot; ${new Date(n.createdAt).toLocaleString()}</span>`;
+      list.appendChild(li);
+    }
+  } catch (e) {
+    list.innerHTML = '<li class="empty">Nothing here yet.</li>';
+    show('Notes API: ' + e.message);
+  }
+}
+
+document.getElementById('assetForm').onsubmit = async (ev) => {
+  ev.preventDefault();
+  try {
+    await api('/api/assets', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('assetName').value,
+        type: document.getElementById('assetType').value,
+        serialNumber: document.getElementById('assetSerial').value
+      })
+    });
+    ev.target.reset();
+    await loadAssets();
+  } catch (e) { show(e.message); }
+};
+
+document.getElementById('noteForm').onsubmit = async (ev) => {
+  ev.preventDefault();
+  try {
+    await api(`/api/assets/${selectedAsset.id}/notes`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: document.getElementById('noteText').value,
+        author: document.getElementById('noteAuthor').value
+      })
+    });
+    ev.target.reset();
+    await loadNotes();
+  } catch (e) { show(e.message); }
+};
+
+loadAssets();
+</script>
+</body>
+</html>
