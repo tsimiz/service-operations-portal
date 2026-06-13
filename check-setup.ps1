@@ -55,8 +55,14 @@ Write-Host "`nVS Code"
 if (Have code) {
   Ok "VS Code CLI (code) detected."
   $exts = (& code --list-extensions 2>$null)
-  if ($exts -match '^github\.copilot$')       { Ok "GitHub Copilot extension installed." }      else { Fix "GitHub Copilot extension not found; install 'GitHub Copilot' in VS Code." }
-  if ($exts -match '^github\.copilot-chat$')   { Ok "GitHub Copilot Chat extension installed." } else { Warn "GitHub Copilot Chat extension not found; install it for the chat and agent demos." }
+  # Newer VS Code builds ship Copilot Chat as built-in, which may not appear in --list-extensions.
+  $copilotPath = ((& code --locate-extension github.copilot 2>$null) | Select-Object -First 1)
+  $copilotChatPath = ((& code --locate-extension github.copilot-chat 2>$null) | Select-Object -First 1)
+  $hasCopilot = ($exts -match '^github\.copilot$') -or [bool]$copilotPath
+  $hasCopilotChat = ($exts -match '^github\.copilot-chat$') -or [bool]$copilotChatPath
+
+  if ($hasCopilot -or $hasCopilotChat) { Ok "GitHub Copilot available." } else { Fix "GitHub Copilot extension not found; install 'GitHub Copilot' in VS Code." }
+  if ($hasCopilotChat)                 { Ok "GitHub Copilot Chat extension installed." } else { Warn "GitHub Copilot Chat extension not found; install it for the chat and agent demos." }
   if ($exts -match '^vscjava\.vscode-java-pack$') { Ok "Java Extension Pack installed." }        else { Warn "Java Extension Pack not found; install 'Extension Pack for Java' for the test runner." }
 } else {
   Warn "VS Code CLI (code) not on PATH. If VS Code is installed, enable the 'code' command (Command Palette: Shell Command: Install 'code' command in PATH). Extensions not checked."
@@ -90,12 +96,11 @@ if ($script:fixes -eq 0 -and $script:warns -eq 0) {
 } else {
   Write-Host "$($script:fixes) item(s) need fixing above before the labs." -ForegroundColor Red; exit 1
 }
-
 # SIG # Begin signature block
 # MIIFvAYJKoZIhvcNAQcCoIIFrTCCBakCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAAijumAVgBsYBP
-# r5KGJ9Mb0MYscLFbbUdLJk2Eb/2nsaCCAyQwggMgMIICCKADAgECAhAcNvaf0Mhf
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC57YHiqNZ2bGPL
+# rYElSujVpoLDzeNAWDUtaToykktbTaCCAyQwggMgMIICCKADAgECAhAcNvaf0Mhf
 # oU/1mdju2UeKMA0GCSqGSIb3DQEBCwUAMCgxJjAkBgNVBAMMHUxvY2FsIFBvd2Vy
 # U2hlbGwgQ29kZSBTaWduaW5nMB4XDTI2MDYxMzA4MzAzMVoXDTI5MDYxMzA4NDAz
 # MVowKDEmMCQGA1UEAwwdTG9jYWwgUG93ZXJTaGVsbCBDb2RlIFNpZ25pbmcwggEi
@@ -116,11 +121,11 @@ if ($script:fixes -eq 0 -and $script:warns -eq 0) {
 # d2VyU2hlbGwgQ29kZSBTaWduaW5nAhAcNvaf0MhfoU/1mdju2UeKMA0GCWCGSAFl
 # AwQCAQUAoIGEMBgGCisGAQQBgjcCAQwxCjAIoAKAAKECgAAwGQYJKoZIhvcNAQkD
 # MQwGCisGAQQBgjcCAQQwHAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUwLwYJ
-# KoZIhvcNAQkEMSIEILHVP6yCHoge9qsWTKYfA9cpY1aT/7grNiMVE1LrOvcGMA0G
-# CSqGSIb3DQEBAQUABIIBAHWemCRJuJkw248OkEZ5GdNxs7cKfQKh2legg+s6Zf/s
-# rFkQbbTtQDiBdBS70KfHB9HqLT5a53Kj6uyNZpiV7TOYljECzcO0kU96oU3/NBcY
-# wMcvAIr/LYbgpYGdITCiLTwEC2GwPaS4bU+oSd0AV0NzS5vm9n8I6VgeM20/T7qr
-# MALAfED0bdYKia+FOYFvxB54kS2BvecJTs/GD2HazQ9J/k+nX/v4LMkx2iAQg2Mj
-# pe7u5/KEtVFip5dqTKNSyTYKdS4HoAtXacGxaH6iSZFEOS3Dvu9kcrnDlc+Frz5b
-# a2CYVSa81DUnjYaLg7BoaOJWHUkV+rRYtxJdq383B8w=
+# KoZIhvcNAQkEMSIEINfvnRAe4v5CDtEAqm8PhFSfie4wYLIh4tVqTWofjBT5MA0G
+# CSqGSIb3DQEBAQUABIIBAAxG1wHWcj5LvKo1lQHheSh8nthe5K4wojGsyT6a+wR/
+# t8NXHf+aR4x0XRJX0ddffCAPqGn8JuMP4T4DT//R34VoYOuLKYcf6lrHm5M9g9J0
+# 55Y92SuR8712yW+QlvPoK56FRA5SQCpLx0+C6Bx2QHEz6KesQHZSf7dF9YsdnVa8
+# vkrbjW34LF8Xm+0dhahLAQVVcPsT6gK70Y3T1oVyEdbo7TbcZI1KLeHLEqLWqJAv
+# Zzj2xbxI6XlaCdRaM2fmMWZ9al4ybWw6vt+JudFwlzBrgGB50tHMgTl++u6jF92j
+# aeWRK4ULCAY2iS3redB+lQ7h5dkivfjnA7N8xagrN9A=
 # SIG # End signature block
