@@ -36,14 +36,15 @@ Run the setup checker from the repo root. It verifies Java, Maven (or the wrappe
 .\check-setup.ps1 -Build    # also runs a green-build smoke test
 ```
 
-On Windows, if a strict execution policy blocks the script, run it unblocked for one session (this does not change any system setting):
+On Windows, if a strict execution policy blocks any of this repo's PowerShell scripts, run them unblocked for one session (this does not change any system setting):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\check-setup.ps1
 powershell -ExecutionPolicy Bypass -File .\check-setup.ps1 -Build
+powershell -ExecutionPolicy Bypass -File .\reset-demo.ps1        # trainer helper
 ```
 
-The script is unsigned by design; the bypass above is the supported way to run it.
+The scripts are unsigned by design; the bypass above is the supported way to run them.
 
 Do this **before** you travel: the first build downloads a few hundred megabytes, and dozens of people downloading at once on venue WiFi will queue. FIX lines must be resolved; WARN lines are fine to leave.
 
@@ -75,6 +76,7 @@ If you skip this, everything else in the labs still works.
 | `legacy/MaintenanceLog.java` | A 2006-era class used in the refactoring demonstration. Not part of the Maven build. Yes, it really compiles. |
 | `src/main/resources/static/index.html` | The portal UI, one static page with no build tooling. It opens at http://localhost:8080 and shows friendly errors until the APIs exist: the day's job is to make this page come alive. |
 | `check-setup.sh` / `check-setup.ps1` | One-shot readiness checker. Run before the labs. |
+| `reset-demo.sh` / `reset-demo.ps1` | Trainer helper: reset the working tree to a clean demo baseline (shows a preview and asks before deleting). Not needed by participants. |
 | `src/test/java/.../ui/` | Playwright UI tests, tagged `ui`, opt-in via `-Pui-tests`. |
 | `src/` | The application. Nearly empty on purpose: the afternoon fills it. |
 
