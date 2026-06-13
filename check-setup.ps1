@@ -4,6 +4,9 @@
   Add -Build to also run a green-build smoke test (downloads dependencies):
                                  .\check-setup.ps1 -Build
   Prints OK / WARN / FIX per check and a one-line verdict.
+
+  Note: if a strict execution policy blocks this, run it unblocked for one session:
+    powershell -ExecutionPolicy Bypass -File .\check-setup.ps1
 #>
 
 param([switch]$Build)
@@ -96,36 +99,3 @@ if ($script:fixes -eq 0 -and $script:warns -eq 0) {
 } else {
   Write-Host "$($script:fixes) item(s) need fixing above before the labs." -ForegroundColor Red; exit 1
 }
-# SIG # Begin signature block
-# MIIFvAYJKoZIhvcNAQcCoIIFrTCCBakCAQExDzANBglghkgBZQMEAgEFADB5Bgor
-# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC57YHiqNZ2bGPL
-# rYElSujVpoLDzeNAWDUtaToykktbTaCCAyQwggMgMIICCKADAgECAhAcNvaf0Mhf
-# oU/1mdju2UeKMA0GCSqGSIb3DQEBCwUAMCgxJjAkBgNVBAMMHUxvY2FsIFBvd2Vy
-# U2hlbGwgQ29kZSBTaWduaW5nMB4XDTI2MDYxMzA4MzAzMVoXDTI5MDYxMzA4NDAz
-# MVowKDEmMCQGA1UEAwwdTG9jYWwgUG93ZXJTaGVsbCBDb2RlIFNpZ25pbmcwggEi
-# MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC7UQpuOtOO222DInzuUM4lVnbO
-# U3DAMcILQI56O3ZZe+G1R/T949q2wOAR6yzChIb52vVCOGS9wKrLnxM3WqyDuBYP
-# /Nh8or/K9CmvbxtcFaGD2ev5j1A2RfZaMFNqLMdyzEzfTBFkGVChiAniTrQHCq32
-# +0aivRkor9K36vgmMQmU1czkOgb5Qu+4TBXffSWSLq7PdGDhBVkUWBErGzWkj9Pb
-# xphns48br+4dWtoZa1QCnAXqWy31AB+EeqUAlipf2rwUucnw8wDB3l398qiVK6m+
-# W/eIMGG1bhi7Auevl49nrPjhEjn9FooaVbrXP2FQQEX46jV+tAuwebQTk9SJAgMB
-# AAGjRjBEMA4GA1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzAdBgNV
-# HQ4EFgQUrA8Y0GYIjKeyDFMLssu7a5qLzs0wDQYJKoZIhvcNAQELBQADggEBAAdd
-# OJmfwXbpyzb22vel/UZ/I6Nh4QakN5KOUl1I/QrIp8lwHALWxGxQrkQYyGXEu1OT
-# 6lIiOHxd8DqzBC4Rx1ZgEmg3h9bgABqkwBUkJuFhEWN8uZ5FM33LnP/bQLeCEoNd
-# JXeAvCwHCWD06P1YEf1ek+GVZhqPpBWMGPdVZRLxUjorCA2wBY9lFt1K6FHmDUnN
-# tvGOChdhU0Ly0hVg93Rqn/7WBnuD/TJWo6NPxq8VuVeGbNzIxlnxVJgofTkKyhEv
-# Iu7fwVlbE+P1wKf4y/pHv34wbZkmzvJL66O6TIKX7Nl9RBhXDz/dASCpImBOjA72
-# REF3AGz4JI2hsUY5dS0xggHuMIIB6gIBATA8MCgxJjAkBgNVBAMMHUxvY2FsIFBv
-# d2VyU2hlbGwgQ29kZSBTaWduaW5nAhAcNvaf0MhfoU/1mdju2UeKMA0GCWCGSAFl
-# AwQCAQUAoIGEMBgGCisGAQQBgjcCAQwxCjAIoAKAAKECgAAwGQYJKoZIhvcNAQkD
-# MQwGCisGAQQBgjcCAQQwHAYKKwYBBAGCNwIBCzEOMAwGCisGAQQBgjcCARUwLwYJ
-# KoZIhvcNAQkEMSIEINfvnRAe4v5CDtEAqm8PhFSfie4wYLIh4tVqTWofjBT5MA0G
-# CSqGSIb3DQEBAQUABIIBAAxG1wHWcj5LvKo1lQHheSh8nthe5K4wojGsyT6a+wR/
-# t8NXHf+aR4x0XRJX0ddffCAPqGn8JuMP4T4DT//R34VoYOuLKYcf6lrHm5M9g9J0
-# 55Y92SuR8712yW+QlvPoK56FRA5SQCpLx0+C6Bx2QHEz6KesQHZSf7dF9YsdnVa8
-# vkrbjW34LF8Xm+0dhahLAQVVcPsT6gK70Y3T1oVyEdbo7TbcZI1KLeHLEqLWqJAv
-# Zzj2xbxI6XlaCdRaM2fmMWZ9al4ybWw6vt+JudFwlzBrgGB50tHMgTl++u6jF92j
-# aeWRK4ULCAY2iS3redB+lQ7h5dkivfjnA7N8xagrN9A=
-# SIG # End signature block

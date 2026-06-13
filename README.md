@@ -36,7 +36,20 @@ Run the setup checker from the repo root. It verifies Java, Maven (or the wrappe
 .\check-setup.ps1 -Build    # also runs a green-build smoke test
 ```
 
+On Windows, if a strict execution policy blocks the script, run it unblocked for one session (this does not change any system setting):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\check-setup.ps1
+powershell -ExecutionPolicy Bypass -File .\check-setup.ps1 -Build
+```
+
+The script is unsigned by design; the bypass above is the supported way to run it.
+
 Do this **before** you travel: the first build downloads a few hundred megabytes, and dozens of people downloading at once on venue WiFi will queue. FIX lines must be resolved; WARN lines are fine to leave.
+
+Two things the checker is deliberately lenient about, because they vary by version and machine:
+- **Copilot** may be a built-in in recent VS Code and not show in the extension list; the checker says WARN and asks you to confirm the Chat view opens, rather than failing.
+- **Java present but "not found"** usually means JDK 25 is installed but not on this shell's PATH / JAVA_HOME. The checker detects that case and prints the exact command to set it.
 
 ## UI tests (optional, recommended)
 
