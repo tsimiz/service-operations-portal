@@ -5,9 +5,15 @@ This repository is a training project for spec-driven development. Follow these 
 ## Stack
 
 - Java 25, Spring Boot 3.5, Maven
-- Dependencies: spring-boot-starter-web, spring-boot-starter-validation, spring-boot-starter-test. Do not add other dependencies without asking.
+- Dependencies: spring-boot-starter-web, spring-boot-starter-validation, spring-boot-starter-test, and com.microsoft.playwright (test scope, UI tests only). Do not add other dependencies without asking.
 - No database. All storage is in-memory using ConcurrentHashMap inside repository classes. Do not introduce JPA, JDBC or any persistence framework.
 - No Lombok. Use Java records for immutable data.
+- The UI is a single static page at `src/main/resources/static/index.html`. No frontend frameworks, no build tooling, no npm.
+
+## Language
+
+- All code, comments, test names, identifiers and commit messages: English only. Finnish may appear in prompts and discussion, never in the source.
+- No single-letter variables, no unexplained abbreviations. Permitted acronyms: ID, URL, API, DTO, UI.
 
 ## Architecture
 
@@ -16,6 +22,7 @@ Package root: `fi.blackbelt.portal`
 - `api`: REST controllers and request/response DTOs. Controllers contain no business logic.
 - `domain`: domain model (records and enums) and services. Services contain all business rules.
 - `infra`: in-memory repository implementations.
+- `ui` (test sources only): Playwright UI tests.
 
 Dependencies point inward: api depends on domain, infra depends on domain, domain depends on nothing else in this project.
 
@@ -27,14 +34,46 @@ Dependencies point inward: api depends on domain, infra depends on domain, domai
 - Use java.time (Instant for timestamps, set by the server in UTC); never java.util.Date.
 - Validate input at the API boundary with jakarta.validation annotations.
 - Error responses use RFC 7807 problem details (Spring's ProblemDetail). Unknown resource: 404. Validation failure: 400 with the failing fields named.
-- Keep classes small. If a class needs a comment to explain its sections, split it.
+- No file exceeds 300 lines. A service over roughly 200 lines probably has more than one responsibility; split it.
 
-## Test conventions
+## Comments
+
+- Comments explain why, never what. The code states the what; a comment restating the adjacent line is noise and must not be generated.
+- Default to no comment. Add one only where the reason for the code is not visible in the code: a non-obvious rule, a deliberate trade-off, a workaround.
+- When implementing a specific spec rule or compliance clause, reference its id (for example `// SPEC-SN-001 AC-4` or `// REG-01: same-operation audit write`). These references are the traceability thread from code back to spec.
+- No commented-out code, ever. Delete it; version control remembers.
+- Javadoc only on public service methods whose contract is not obvious from the signature and the spec. No Javadoc on getters, records or trivial methods.
+
+## Key enum values
+
+Suggest these exact strings, not alternatives:
+
+| Enum | Values |
+|---|---|
+| `AssetType` | `DEVICE`, `TOOL`, `VEHICLE` |
+| `AssetStatus` | `ACTIVE`, `IN_SERVICE`, `RETIRED` |
+
+Enum values are stored and transmitted uppercase, exactly as above.
+
+## Unit test conventions
 
 - JUnit 5 with AssertJ assertions.
+- Test class: `{ClassUnderTest}Test` (for example `AssetServiceTest`).
 - Test naming: `should_<expected>_when_<condition>` (for example `should_return404_when_assetUnknown`).
+- Structure every test as arrange, act, assert. One behaviour per test.
 - Every service method has at least one happy-path test and one failure-path test.
+- Service tests are plain JUnit, no Spring context. Use Spring's test support (MockMvc) only for API-boundary tests.
 - Test the rules in the spec, not the framework. Do not test getters or Spring wiring.
+- No real personal data in test fixtures: placeholder names and serial numbers only.
+
+## UI test conventions (Playwright)
+
+- UI tests use Playwright for Java, live in `fi.blackbelt.portal.ui`, and are tagged `@Tag("ui")`.
+- UI tests are excluded from the default build. Run them with `mvn verify -Pui-tests` (requires Playwright browsers installed; see README).
+- Selectors: `page.getByTestId(...)` exclusively. Never CSS selectors, never visible-text queries; text changes, test ids are a contract.
+- `data-testid` register: `{domain}-{component}-{variant}` in kebab-case (for example `asset-form-submit`, `note-list-item`). Every interactive element and every dynamic list in `index.html` carries one.
+- When adding UI elements, add the `data-testid` in the same change.
+- UI tests cover user flows (add an asset, see it listed), not styling. Keep them few; the unit tests carry the rule coverage.
 
 ## Spec-driven workflow
 
@@ -50,7 +89,27 @@ Dependencies point inward: api depends on domain, infra depends on domain, domai
 - When a spec references a REG- requirement, the implementation must satisfy it, and the change description must state how, referencing the REG id.
 - Before declaring REG-related work complete, request a review from the compliance-reviewer chat mode (`.github/chatmodes/compliance-reviewer.chatmode.md`).
 
+## Anti-patterns: never suggest these
+
+- ❌ Business logic in a controller method
+- ❌ JPA, JDBC, H2 or any persistence dependency; storage is in-memory by design
+- ❌ Returning null from a repository finder; use Optional
+- ❌ java.util.Date or SimpleDateFormat; use java.time
+- ❌ Field injection or @Autowired on fields
+- ❌ Endpoints, fields or validation rules not present in the approved spec
+- ❌ Implementing anything the spec lists as out of scope (for example note editing or deletion)
+- ❌ Any API that modifies or deletes audit entries; the audit trail is append-only (REG-01)
+- ❌ Lowercasing enum values (`active`, `Device`); the wire format is uppercase
+- ❌ CSS or visible-text selectors in UI tests; `getByTestId` only
+- ❌ UI tests without the `@Tag("ui")` annotation; untagged UI tests break the default build for everyone without browsers installed
+- ❌ Adding frontend frameworks, npm or a build step to the static UI
+- ❌ Narrating comments that restate the code (`// loop over assets`, `// return the result`)
+- ❌ Commented-out code left in the source
+- ❌ A `Co-authored-by: Copilot` (or any tool) trailer in a commit; authorship trailers name people, disclosure goes in the PR or commit body
+
 ## Etiquette
 
-- Disclose AI assistance in commit messages and pull requests.
+- You own the output. AI assistance never transfers responsibility for what is committed; review every change as your own work.
+- Disclosure is contextual, not a blanket stamp. Disclose AI involvement where another person's trust or a record depends on it (for example a pull request whose generated tests a reviewer should scrutinise), in the PR description or commit body. Routine per-commit "made with AI" notes are noise and are not expected here.
+- Keep machine identities out of the authorship trail. The workspace setting `git.addAICoAuthor` is `off` in `.vscode/settings.json`: in product development and regulated contexts the commit history is an IPR and audit record. Do not add `Co-authored-by: Copilot` (or any tool) trailers. This is a deliberate repository policy, not a personal habit, which is why it lives in the repo.
 - Keep changes small enough to review. Never produce a single change touching more than roughly ten files without explicit approval.

@@ -21,6 +21,34 @@ mvn verify
 
 `mvn verify` must finish green before the labs start. If it does not, raise a hand early.
 
+### Quick check: am I ready?
+
+Run the setup checker from the repo root. It verifies Java, Maven (or the wrapper), Git, VS Code and the Copilot extensions, and prints OK / WARN / FIX per line.
+
+```bash
+# macOS / Linux
+./check-setup.sh            # fast checks only
+./check-setup.sh --build    # also runs a green-build smoke test (downloads dependencies)
+```
+```powershell
+# Windows
+.\check-setup.ps1           # fast checks only
+.\check-setup.ps1 -Build    # also runs a green-build smoke test
+```
+
+Do this **before** you travel: the first build downloads a few hundred megabytes, and dozens of people downloading at once on venue WiFi will queue. FIX lines must be resolved; WARN lines are fine to leave.
+
+## UI tests (optional, recommended)
+
+UI tests use Playwright for Java and are excluded from the default build, so the project stays green without browsers. To enable them, install the Chromium browser once (a one-time download) and run with the profile:
+
+```bash
+mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium"
+mvn verify -Pui-tests
+```
+
+If you skip this, everything else in the labs still works.
+
 ## What is where
 
 | Path | What it is |
@@ -33,6 +61,8 @@ mvn verify
 | `docs/demo-material/` | Inputs used in the morning demonstrations. |
 | `legacy/MaintenanceLog.java` | A 2006-era class used in the refactoring demonstration. Not part of the Maven build. Yes, it really compiles. |
 | `src/main/resources/static/index.html` | The portal UI, one static page with no build tooling. It opens at http://localhost:8080 and shows friendly errors until the APIs exist: the day's job is to make this page come alive. |
+| `check-setup.sh` / `check-setup.ps1` | One-shot readiness checker. Run before the labs. |
+| `src/test/java/.../ui/` | Playwright UI tests, tagged `ui`, opt-in via `-Pui-tests`. |
 | `src/` | The application. Nearly empty on purpose: the afternoon fills it. |
 
 ## The afternoon at a glance

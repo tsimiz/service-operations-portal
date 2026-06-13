@@ -35,35 +35,35 @@
 <body>
 <header>
   <div class="diamond"></div>
-  <h1>Service Operations Portal</h1>
+  <h1 data-testid="portal-header-title">Service Operations Portal</h1>
   <small>BLACK BELT CONSULTING &times; AO FINLAND &middot; TRAINING</small>
 </header>
 
-<div id="banner"><div class="msg" id="message"></div></div>
+<div id="banner"><div class="msg" id="message" data-testid="portal-message-banner"></div></div>
 
 <main>
   <section>
     <h2>Assets</h2>
-    <ul id="assetList"><li class="empty">Loading…</li></ul>
-    <form id="assetForm">
-      <input id="assetName" placeholder="Name (e.g. OCT Scanner, Room 3)" required>
-      <select id="assetType">
+    <ul id="assetList" data-testid="asset-list"><li class="empty">Loading…</li></ul>
+    <form id="assetForm" data-testid="asset-form">
+      <input id="assetName" data-testid="asset-form-name" placeholder="Name (e.g. OCT Scanner, Room 3)" required>
+      <select id="assetType" data-testid="asset-form-type">
         <option value="DEVICE">DEVICE</option>
         <option value="TOOL">TOOL</option>
         <option value="VEHICLE">VEHICLE</option>
       </select>
-      <input id="assetSerial" placeholder="Serial number" required>
-      <button type="submit">Add asset</button>
+      <input id="assetSerial" data-testid="asset-form-serial" placeholder="Serial number" required>
+      <button type="submit" data-testid="asset-form-submit">Add asset</button>
     </form>
   </section>
 
   <section>
     <h2>Service notes <span id="noteTarget" style="color:var(--mut);font-size:12px"></span></h2>
-    <ul id="noteList"><li class="empty">Select an asset to see its notes.</li></ul>
-    <form id="noteForm" style="display:none">
-      <textarea id="noteText" placeholder="Observation…" required></textarea>
-      <input id="noteAuthor" placeholder="Author" required>
-      <button type="submit">Add note</button>
+    <ul id="noteList" data-testid="note-list"><li class="empty">Select an asset to see its notes.</li></ul>
+    <form id="noteForm" data-testid="note-form" style="display:none">
+      <textarea id="noteText" data-testid="note-form-text" placeholder="Observation…" required></textarea>
+      <input id="noteAuthor" data-testid="note-form-author" placeholder="Author" required>
+      <button type="submit" data-testid="note-form-submit">Add note</button>
     </form>
   </section>
 </main>
@@ -103,6 +103,7 @@ async function loadAssets() {
     if (!assets.length) { list.innerHTML = '<li class="empty">No assets yet. Add one below.</li>'; return; }
     for (const a of assets) {
       const li = document.createElement('li');
+      li.dataset.testid = 'asset-list-item';
       li.innerHTML = `<strong>${a.name}</strong><span class="meta">${a.type} &middot; ${a.serialNumber} &middot; ${a.status}</span>`;
       li.onclick = () => selectAsset(a, li);
       list.appendChild(li);
@@ -132,6 +133,7 @@ async function loadNotes() {
     if (!notes.length) { list.innerHTML = '<li class="empty">No notes for this asset yet.</li>'; return; }
     for (const n of notes) {
       const li = document.createElement('li');
+      li.dataset.testid = 'note-list-item';
       li.style.cursor = 'default';
       li.innerHTML = `${n.text}<span class="meta">${n.author} &middot; ${new Date(n.createdAt).toLocaleString()}</span>`;
       list.appendChild(li);

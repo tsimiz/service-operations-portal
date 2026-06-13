@@ -1,0 +1,11 @@
+{
+  // House rule: keep machine identities out of the authorship trail. VS Code's
+  // Git integration can append a "Co-authored-by: Copilot" trailer when chat or
+  // agent features contributed to a commit; we turn that off. Disclosing AI
+  // assistance is still expected (in the PR description or commit body), but the
+  // commit's authorship trailer names people, not tools. This matters most in
+  // product development and regulated contexts, where commit history is an IPR
+  // and audit record. The repository encodes the policy so it does not depend on
+  // each developer's personal settings.
+  "git.addAICoAuthor": "off"
+}

@@ -19,6 +19,8 @@
 
   <properties>
     <java.version>25</java.version>
+    <playwright.version>1.49.0</playwright.version>
+    <surefire.excludedGroups>ui</surefire.excludedGroups>
   </properties>
 
   <dependencies>
@@ -35,6 +37,12 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.microsoft.playwright</groupId>
+      <artifactId>playwright</artifactId>
+      <version>${playwright.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -43,6 +51,23 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludedGroups>${surefire.excludedGroups}</excludedGroups>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <!-- UI tests need Playwright browsers installed; opt in explicitly. -->
+    <profile>
+      <id>ui-tests</id>
+      <properties>
+        <surefire.excludedGroups></surefire.excludedGroups>
+      </properties>
+    </profile>
+  </profiles>
 </project>
