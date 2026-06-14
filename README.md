@@ -42,6 +42,8 @@ On Windows, if a strict execution policy blocks any of this repo's PowerShell sc
 powershell -ExecutionPolicy Bypass -File .\check-setup.ps1
 powershell -ExecutionPolicy Bypass -File .\check-setup.ps1 -Build
 powershell -ExecutionPolicy Bypass -File .\reset-demo.ps1        # trainer helper
+powershell -ExecutionPolicy Bypass -File .\make-fallback.ps1 -Name <branch> -Message <msg>   # trainer helper
+powershell -ExecutionPolicy Bypass -File .\prep-demo-folders.ps1                              # trainer helper
 ```
 
 The scripts are unsigned by design; the bypass above is the supported way to run them.
@@ -77,6 +79,8 @@ If you skip this, everything else in the labs still works.
 | `src/main/resources/static/index.html` | The portal UI, one static page with no build tooling. It opens at http://localhost:8080 and shows friendly errors until the APIs exist: the day's job is to make this page come alive. |
 | `check-setup.sh` / `check-setup.ps1` | One-shot readiness checker. Run before the labs. |
 | `reset-demo.sh` / `reset-demo.ps1` | Trainer helper: reset the working tree to a clean demo baseline (shows a preview and asks before deleting). Not needed by participants. |
+| `make-fallback.sh` / `make-fallback.ps1` | Trainer helper: capture the current demo result as a fallback branch (commit + label in one call). Not needed by participants. |
+| `prep-demo-folders.sh` / `prep-demo-folders.ps1` | Trainer helper: build the three Module 4 demo folders (good / poor / noconv). Not needed by participants. |
 | `src/test/java/.../ui/` | Playwright UI tests, tagged `ui`, opt-in via `-Pui-tests`. |
 | `src/` | The application. Nearly empty on purpose: the afternoon fills it. |
 
