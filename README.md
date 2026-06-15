@@ -103,8 +103,10 @@ If you skip this, everything else in the labs still works.
 
 | Path | What it is |
 |---|---|
-| `.github/copilot-instructions.md` | The repository conventions. Copilot reads these automatically; so should you. |
-| `.github/chatmodes/compliance-reviewer.chatmode.md` | The compliance reviewer agent used in the Lab 5 extension. |
+| `.github/copilot-instructions.md` | The repository conventions (coding standards only). Copilot reads these automatically; so should you. |
+| `.github/agents/` | Custom agents. The pipeline agents (orchestrator, spec-plan, code, doc, verdict) that the morning demonstration runs, plus `compliance-reviewer.agent.md`, the read-only reviewer used in the Lab 5 extension. |
+| `docs/decisions/` | Decision documents (maintenance tickets). The orchestrator runs the pipeline from one of these. |
+| `labs/` | The Day 2 lab instructions (Labs 3 to 7), one Markdown file each. Start at `labs/README.md`. |
 | `docs/specs/` | Specifications. The demo specs are here; your Lab 3 spec will live here too. |
 | `docs/plans/` | Implementation plans (Lab 4 output). |
 | `docs/compliance-requirements.md` | Written compliance requirements (REG-01, REG-02). Used in Lab 5. |

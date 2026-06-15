@@ -1,6 +1,6 @@
 # Copilot Instructions: Service Operations Portal
 
-This repository is a training project for spec-driven development. Follow these conventions in all generated code, plans and documentation.
+Coding standards for this repository. These apply to every generated change. Workflow (what order to do things in, when to review, when to run a compliance check) lives in the agent files under `.github/agents/` and in the lab instructions under `labs/`, not here.
 
 ## Stack
 
@@ -75,19 +75,23 @@ Enum values are stored and transmitted uppercase, exactly as above.
 - When adding UI elements, add the `data-testid` in the same change.
 - UI tests cover user flows (add an asset, see it listed), not styling. Keep them few; the unit tests carry the rule coverage.
 
-## Spec-driven workflow
+## Working from a spec
 
 - Implement only what an approved specification in `docs/specs/` defines. The spec is the source of truth; the code is an output.
-- If the spec is silent or ambiguous on something you need, stop and ask. Do not invent requirements, endpoints, fields or validation rules.
-- Anything listed as out of scope in the spec must not appear in the code.
-- Work in small, verifiable steps and present each step for review before continuing.
+- Do not invent endpoints, fields or validation rules. Anything the spec lists as out of scope must not appear in the code.
+- If the spec is silent or ambiguous on something you need, ask rather than invent.
 - Reference the spec ID (for example SPEC-SN-001) in commit messages.
 
-## Compliance
+## Compliance and traceability
 
 - Compliance requirements live in `docs/compliance-requirements.md` with REG- identifiers.
-- When a spec references a REG- requirement, the implementation must satisfy it, and the change description must state how, referencing the REG id.
-- Before declaring REG-related work complete, request a review from the compliance-reviewer chat mode (`.github/chatmodes/compliance-reviewer.chatmode.md`).
+- When a spec references a REG- requirement, the implementation must satisfy it and reference the REG id in the code (per the Comments rule) and in the change description.
+- The audit trail is append-only: never generate an API or code path that edits or deletes an audit entry (REG-01).
+
+## Commit authorship (repository policy)
+
+- Do not add a `Co-authored-by: Copilot` (or any tool) trailer to commits. Authorship trailers name people; the commit history is an IPR and audit record. The workspace setting `git.addAICoAuthor` is `off` in `.vscode/settings.json`; this is a deliberate repository policy, not a personal habit.
+- Keep changes small enough to review: never produce a single change touching more than roughly ten files without explicit approval.
 
 ## Anti-patterns: never suggest these
 
@@ -105,11 +109,4 @@ Enum values are stored and transmitted uppercase, exactly as above.
 - ❌ Adding frontend frameworks, npm or a build step to the static UI
 - ❌ Narrating comments that restate the code (`// loop over assets`, `// return the result`)
 - ❌ Commented-out code left in the source
-- ❌ A `Co-authored-by: Copilot` (or any tool) trailer in a commit; authorship trailers name people, disclosure goes in the PR or commit body
-
-## Etiquette
-
-- You own the output. AI assistance never transfers responsibility for what is committed; review every change as your own work.
-- Disclosure is contextual, not a blanket stamp. Disclose AI involvement where another person's trust or a record depends on it (for example a pull request whose generated tests a reviewer should scrutinise), in the PR description or commit body. Routine per-commit "made with AI" notes are noise and are not expected here.
-- Keep machine identities out of the authorship trail. The workspace setting `git.addAICoAuthor` is `off` in `.vscode/settings.json`: in product development and regulated contexts the commit history is an IPR and audit record. Do not add `Co-authored-by: Copilot` (or any tool) trailers. This is a deliberate repository policy, not a personal habit, which is why it lives in the repo.
-- Keep changes small enough to review. Never produce a single change touching more than roughly ten files without explicit approval.
+- ❌ A `Co-authored-by: Copilot` (or any tool) trailer in a commit
