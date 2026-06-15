@@ -18,6 +18,7 @@ function Ok($m)   { Write-Host "  OK   " -ForegroundColor Green -NoNewline; Writ
 function Warn($m) { Write-Host "  WARN " -ForegroundColor Yellow -NoNewline; Write-Host $m; $script:warns++ }
 function Fix($m)  { Write-Host "  FIX  " -ForegroundColor Red -NoNewline; Write-Host $m; $script:fixes++ }
 function Have($c) { return [bool](Get-Command $c -ErrorAction SilentlyContinue) }
+function SdkmanTip { if (Test-Path ".sdkmanrc") { Write-Host "       Tip: open Git Bash and run 'sdk env install' (uses .sdkmanrc) for JDK 25, or install Temurin 25 and set JAVA_HOME." } }
 
 Write-Host "Service Operations Portal - setup check" -ForegroundColor White
 Write-Host ""
@@ -32,10 +33,11 @@ if (Have java) {
     if ($ver -eq 1 -and $raw -match 'version "1\.(\d+)') { $ver = [int]$Matches[1] }
   }
   if ($ver -ge 25)     { Ok "java $ver detected ($raw)" }
-  elseif ($ver -ge 21) { Warn "java $ver detected; labs target Java 25. It may build, but install JDK 25 to match." }
-  else                 { Fix "java $ver detected; install JDK 25 (Microsoft Build of OpenJDK or Temurin)." }
+  elseif ($ver -ge 21) { Warn "java $ver detected; labs target Java 25. It may build, but install JDK 25 to match."; SdkmanTip }
+  else                 { Fix "java $ver detected; install JDK 25 (Microsoft Build of OpenJDK or Temurin)."; SdkmanTip }
 } else {
   Fix "java not found; install JDK 25 (Microsoft Build of OpenJDK or Temurin)."
+  SdkmanTip
 }
 
 # --- Maven or wrapper ---

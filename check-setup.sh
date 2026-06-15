@@ -14,6 +14,7 @@ ok()   { printf "  ${GREEN}OK${RESET}   %s\n" "$1"; }
 warn() { printf "  ${YELLOW}WARN${RESET} %s\n" "$1"; warns=$((warns+1)); }
 fix()  { printf "  ${RED}FIX${RESET}  %s\n" "$1"; fixes=$((fixes+1)); }
 have() { command -v "$1" >/dev/null 2>&1; }
+sdkman_tip(){ [ -f ".sdkmanrc" ] && printf "       Tip: this repo has .sdkmanrc; with SDKMAN run 'sdk env install' to get JDK 25 (your default Java stays untouched).\n"; }
 
 printf "${BOLD}Service Operations Portal - setup check${RESET}\n\n"
 
@@ -24,8 +25,8 @@ if have java; then
   ver="$(printf '%s' "$raw" | sed -nE 's/.*version "([0-9]+)([."]).*/\1/p')"
   [ "${ver:-0}" = "1" ] && ver="$(printf '%s' "$raw" | sed -nE 's/.*version "1\.([0-9]+).*/\1/p')"
   if   [ "${ver:-0}" -ge 25 ] 2>/dev/null; then ok "java $ver detected ($raw)"
-  elif [ "${ver:-0}" -ge 21 ] 2>/dev/null; then warn "java $ver detected; labs target Java 25. It may build, but install JDK 25 to match."
-  else fix "java $ver detected; install JDK 25 (Microsoft Build of OpenJDK or Temurin)."; fi
+  elif [ "${ver:-0}" -ge 21 ] 2>/dev/null; then warn "java $ver detected; labs target Java 25. It may build, but install JDK 25 to match."; sdkman_tip
+  else fix "java $ver detected; install JDK 25 (Microsoft Build of OpenJDK or Temurin)."; sdkman_tip; fi
 else
   # Java may be installed but not on PATH. Look in common locations before failing.
   found=""
@@ -40,7 +41,7 @@ else
     printf "         export JAVA_HOME=\"%s\"\n" "${found%/}"
     printf "         export PATH=\"\$JAVA_HOME/bin:\$PATH\"\n"
   else
-    fix "java not found; install JDK 25 (Microsoft Build of OpenJDK or Temurin), then ensure it is on PATH."
+    fix "java not found; install JDK 25 (Microsoft Build of OpenJDK or Temurin), then ensure it is on PATH."; sdkman_tip
   fi
 fi
 

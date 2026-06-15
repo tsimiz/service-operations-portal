@@ -6,10 +6,44 @@ This is the project used in the live demonstrations and in Labs 3 to 7. You clon
 
 ## Prerequisites (check before the training)
 
-- JDK 25 (`java --version`)
+- JDK 25 (`java --version`); if your default is JDK 17, see "Getting Java 25 without disturbing your system Java" below
 - Maven 3.9+ (`mvn --version`)
 - VS Code with the GitHub Copilot and GitHub Copilot Chat extensions, signed in with your GitHub Copilot licence
 - A GitHub account
+
+## Getting Java 25 without disturbing your system Java
+
+The labs target **JDK 25**. If your machine defaults to another JDK (for example a corporate JDK 17), you do not need to change it. This repo ships a `.sdkmanrc` file that pins Java 25 for this project only, using [SDKMAN](https://sdkman.io). SDKMAN installs into your home folder, needs no admin rights, and leaves your system default Java untouched.
+
+> **Windows users:** SDKMAN runs in **Git Bash** or WSL, not in PowerShell or CMD. Git Bash is included with Git for Windows (already a prerequisite), so open **Git Bash** for the steps below and for running `mvn`.
+
+One-time install of SDKMAN (Git Bash / WSL / macOS / Linux):
+
+```bash
+curl -s "https://get.sdkman.io" | bash
+exec "$SHELL"        # or just close and reopen the terminal
+```
+
+Then, from the repo root, install and switch to Java 25:
+
+```bash
+cd service-operations-portal
+sdk env install      # reads .sdkmanrc, installs JDK 25 if missing, switches this shell
+java -version        # should report 25
+mvn verify           # builds on Java 25
+```
+
+`sdk env` switches only the current shell and only inside this project, so your default Java returns the moment you close the terminal. If `25.0.1-tem` is not offered, run `sdk list java` and put any `25.x-tem` build in `.sdkmanrc`.
+
+### Windows fallback (no Git Bash or WSL)
+
+Install **Eclipse Temurin 25** (MSI) or the **Microsoft Build of OpenJDK 25**, then point the current shell at it:
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-25"   # adjust to your install path
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+java -version    # should report 25
+```
 
 ## Getting started
 

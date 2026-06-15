@@ -1,0 +1,11 @@
+# Pins the JDK for the Service Operations Portal labs (Java 25).
+#
+# Git Bash (Windows) / WSL / macOS / Linux:
+#   sdk env install     installs JDK 25 if missing, then switches THIS shell to it
+#   sdk env             switches an already-installed JDK 25 for this shell
+#
+# This affects only the current shell, inside this project. Your machine's
+# default Java (for example Topcon's JDK 17) is left completely untouched.
+#
+# If 25.0.1-tem is not offered, run 'sdk list java' and use any 25.x-tem build.
+java=25.0.1-tem
