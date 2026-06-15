@@ -1,6 +1,4 @@
 ---
-# VERIFY THIS FRONTMATTER before training.
-# Check code.visualstudio.com/docs/copilot/customization/custom-agents
 name: Doc
 description: >
   Updates docs/changelog.md and any documentation files the change touched.
@@ -8,7 +6,7 @@ description: >
 tools:
   - read_file
   - edit_file
-  - codebase
+  - search/codebase
 ---
 
 # Doc Agent

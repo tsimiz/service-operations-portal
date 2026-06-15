@@ -41,7 +41,9 @@ Important training design
 
 Plan mode researches the spec and the codebase and outlines a multi-step plan. It still produces a plan a human rejects or reorders. Plan mode is not auto-approval. The plan-review gate is the whole point of this lab, so do not skip the review and jump to Lab 5.
 
-Exercise 4.1 — Generate the plan
+One thing to know up front: built-in Plan mode saves its plan to its own session memory (reachable via the "Chat: Show Memory Files" command), not to a path you name in the prompt. So producing the plan and saving it to docs/plans/plan-lab.md are two steps, and Step 4.1.3 does the save. Plan mode plans; Agent mode writes the file. That hand-off is the same Plan-to-Agent boundary the "Implement plan" button uses.
+
+Exercise 4.1 — Generate the plan, then save it
 
 Time: 13:40–13:50
 Step 4.1.1 — Switch to Plan mode
@@ -50,16 +52,24 @@ In the Copilot Chat panel, select Plan mode from the mode picker.
 
 Step 4.1.2 — Run the planning prompt
 
-Open docs/specs/spec-lab.md so it is in context, then paste this prompt exactly:
+Open docs/specs/spec-lab.md so it is in context, then paste this prompt:
 
-    Read docs/specs/spec-lab.md and produce an implementation plan at docs/plans/plan-lab.md. Include ordered implementation steps, each small enough to verify on its own, and a test strategy mapped to the spec's acceptance criteria. Do not write any code.
+    Read docs/specs/spec-lab.md and draft an implementation plan: ordered implementation steps, each small enough to verify on its own, and a test strategy mapped to the spec's acceptance criteria. Do not write any code.
 
-Let it produce the plan file. Do not implement anything yet.
+Plan mode produces the plan in chat (and in its session memory). It does not yet exist as a file in the repo; that is the next step.
+
+Step 4.1.3 — Save the plan to the repo
+
+Switch the mode picker to Agent mode, then prompt:
+
+    Save the implementation plan you just produced to docs/plans/plan-lab.md, exactly as written. Do not add code; only create that one Markdown file.
+
+Approve the file write. Confirm docs/plans/plan-lab.md now exists in the Explorer. (If you prefer to do it by hand: open the plan from the "Chat: Show Memory Files" command and save it as docs/plans/plan-lab.md.)
 
 Validation
 
-[ ] Copilot is in Plan mode
-[ ] docs/plans/plan-lab.md was produced
+[ ] The plan was drafted in Plan mode
+[ ] docs/plans/plan-lab.md now exists in the repo (saved via Agent mode or by hand)
 [ ] No application code under src/ was created or changed in this exercise
 [ ] The plan contains ordered steps and a test strategy
 

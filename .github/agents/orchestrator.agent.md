@@ -1,7 +1,4 @@
 ---
-# VERIFY THIS FRONTMATTER before training: the VS Code Copilot agent schema
-# changes between builds. Check code.visualstudio.com/docs/copilot/customization/custom-agents
-# for the current required fields and any renamed keys.
 name: Pipeline Orchestrator
 description: >
   Reads a maintenance ticket and dispatches the spec-plan, code, doc, and

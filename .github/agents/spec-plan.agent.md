@@ -1,6 +1,4 @@
 ---
-# VERIFY THIS FRONTMATTER before training.
-# Check code.visualstudio.com/docs/copilot/customization/custom-agents
 name: Spec and Plan
 description: >
   Reads a maintenance ticket and produces a short feature spec and a
@@ -10,7 +8,7 @@ description: >
 tools:
   - read_file
   - create_file
-  - codebase
+  - search/codebase
 ---
 
 # Spec and Plan Agent

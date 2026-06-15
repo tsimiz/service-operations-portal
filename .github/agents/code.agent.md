@@ -1,6 +1,4 @@
 ---
-# VERIFY THIS FRONTMATTER before training.
-# Check code.visualstudio.com/docs/copilot/customization/custom-agents
 name: Code
 description: >
   Reads the implementation plan from docs/plans/scratch-plan.md and implements
@@ -12,7 +10,7 @@ tools:
   - create_file
   - edit_file
   - terminal
-  - codebase
+  - search/codebase
 ---
 
 # Code Agent

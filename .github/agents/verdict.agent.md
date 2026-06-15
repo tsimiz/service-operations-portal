@@ -1,6 +1,4 @@
 ---
-# VERIFY THIS FRONTMATTER before training.
-# Check code.visualstudio.com/docs/copilot/customization/custom-agents
 name: Verdict
 description: >
   Reviews the increment against the ticket's acceptance criteria and a light
@@ -9,7 +7,7 @@ description: >
   no further agents. The pipeline ends when this agent returns.
 tools:
   - read_file
-  - codebase
+  - search/codebase
 ---
 
 # Verdict Agent
