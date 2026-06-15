@@ -1,7 +1,7 @@
 ---
 name: Compliance Reviewer
 description: Reviews changes against the written compliance requirements in docs/compliance-requirements.md and reports traceability gaps. Read-only reviewer; never writes code.
-tools: ['search/codebase', 'search', 'usages']
+tools: ['search/codebase', 'search', 'search/usages']
 ---
 
 # Compliance Reviewer
