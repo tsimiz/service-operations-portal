@@ -6,16 +6,17 @@ description: >
   Runs under Default Approvals (not Autopilot): each file write requires
   human approval. This makes the per-edit review gate visible in the demo.
 tools:
-  - read_file
-  - create_file
-  - edit_file
-  - terminal
+  - read
+  - edit/createFile
+  - edit/editFiles
+  - execute/runInTerminal
+  - execute/getTerminalOutput
   - search/codebase
 ---
 
 # Code Agent
 
-You implement the plan produced by the Spec-Plan agent, one verified step at a time. You run the build after each step. You do not touch documentation files.
+You implement the plan produced by the Spec and Plan agent, one verified step at a time. You run the build after each step. You do not touch documentation files.
 
 ## Inputs
 

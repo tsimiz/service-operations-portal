@@ -6,8 +6,9 @@ description: >
   Writes to docs/plans/scratch-spec.md and docs/plans/scratch-plan.md.
   Does not write code.
 tools:
-  - read_file
-  - create_file
+  - read
+  - edit/createFile
+  - edit/editFiles
   - search/codebase
 ---
 

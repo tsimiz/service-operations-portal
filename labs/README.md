@@ -4,6 +4,10 @@ Agentic Software Development Training, Day 2 (Topcon Healthcare, Black Belt Cons
 
 These labs build one feature, Service Notes, end to end. Each lab is one stage of the agentic pipeline you saw demonstrated in the morning: you do by hand what each agent did. Nothing is throwaway; each lab feeds the next.
 
+Starting point: the Asset API foundation
+
+The labs extend an existing system. The Service Notes feature attaches notes to assets (`POST /api/assets/{assetId}/notes`, and an unknown asset returns 404), so the Asset API has to exist first. You generate it yourself at the start of Lab 3 (Exercise 3.0), using the same prompt the morning's Demo 3.1 used. It takes a few minutes and gives you assets to attach notes to. There is nothing to check out: you build the foundation, then build Service Notes on top of it.
+
 The arc
 
 | Lab | Stage | You are the... | Output | Time |

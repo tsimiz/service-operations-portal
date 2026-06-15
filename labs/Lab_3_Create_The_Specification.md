@@ -10,6 +10,8 @@ This afternoon you build one feature end to end, the same way the morning pipeli
 
 The goal is not a long document. The goal is a specification with testable acceptance criteria, stated non-functional requirements, and an explicit out-of-scope section, so that the next stage (Lab 4, the plan) and the stage after (Lab 5, the code) have something unambiguous to work from.
 
+The feature attaches notes to assets. You generate the Asset API itself in Exercise 3.0 below (the same code the morning's Demo 3.1 built), and from then on your spec describes the notes, not the assets. You can assume an asset has an id you can reference and that looking up an unknown asset is already an error the system can raise.
+
 Learning objectives
 
 By the end of this lab, you can:
@@ -55,9 +57,43 @@ The starting request is deliberately vague. That is the point. The things it doe
 
 A reference specification exists (spec-service-notes-GOOD.md). Do not open it before you write your own. It is there for the self-check in Exercise 3.4, so you can compare your spec to one that works. Opening it first turns the lab into copying.
 
+Exercise 3.0 — Set up the Asset API (the foundation your notes attach to)
+
+Time: 13:00–13:06
+
+The Service Notes feature attaches notes to assets, so the Asset API has to exist before you can build the notes on top of it. You generate it now, with the same prompt the morning's Demo 3.1 used. This is one-time setup; the rest of the lab is the specification work.
+
+Step 3.0.1 — Switch to Agent mode
+
+In the Copilot Chat panel, select Agent mode and confirm Default Approvals is on (the toggle at the bottom of the panel). Agent mode can create and edit files; Default Approvals means each write waits for your yes, so you stay in control.
+
+Step 3.0.2 — Generate the Asset API
+
+Give Copilot this prompt:
+
+    Implement the Asset API described in docs/demo-material/requirements-asset.md. Follow the repository conventions: production code only (domain model, repository, controller, error handling) and the unit tests. Work in small steps.
+
+Approve the changes as they come. This creates the Asset domain model, the in-memory repository, the controller with its error handling, and the unit tests.
+
+Step 3.0.3 — Confirm the build is green
+
+In the terminal, run:
+
+    ./mvnw verify
+
+(Use mvn verify if you are not on the wrapper.) You want BUILD SUCCESS with the Asset tests passing before you move on.
+
+Validation
+
+    [ ] The Asset API exists under src/main (domain model, repository, controller, error handling)
+    [ ] The Asset unit tests exist under src/test and pass
+    [ ] ./mvnw verify is green
+
+You now have assets to attach notes to. Everything after this builds Service Notes on top of this foundation.
+
 Exercise 3.1 — Explore in Ask mode
 
-Time: 13:00–13:08
+Time: 13:06–13:12
 Step 3.1.1 — Switch Copilot to Ask mode
 
 In the Copilot Chat panel, select Ask mode from the mode picker. Ask mode is read-only: it explores and explains, it never edits files. This is the safe mode for understanding a codebase before you change it.
@@ -78,7 +114,7 @@ Validation
 
 Exercise 3.2 — Draft the specification
 
-Time: 13:08–13:25
+Time: 13:12–13:27
 Step 3.2.1 — Create the file
 
 Create a new file at docs/specs/spec-lab.md.
@@ -104,7 +140,7 @@ Validation
 
 Exercise 3.3 — Add test scenarios
 
-Time: 13:25–13:33
+Time: 13:27–13:34
 
 Add a short Test scenarios section to spec-lab.md: a handful of named scenarios (T1, T2, ...) covering the happy path, the validation failures, and the not-found case. These become the test strategy in Lab 4 and the tests in Lab 5, so the trail starts here.
 
@@ -119,7 +155,7 @@ Validation
 
 Exercise 3.4 — Self-check against what good looks like
 
-Time: 13:33–13:40
+Time: 13:34–13:40
 Step 3.4.1 — Check your own spec
 
 Before approving, run the checklist from the slides against your spec:

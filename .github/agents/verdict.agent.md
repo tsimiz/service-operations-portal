@@ -6,7 +6,7 @@ description: >
   with a one-paragraph rationale. This is the terminal stage: no handoffs,
   no further agents. The pipeline ends when this agent returns.
 tools:
-  - read_file
+  - read
   - search/codebase
 ---
 

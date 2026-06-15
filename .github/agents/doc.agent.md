@@ -4,8 +4,9 @@ description: >
   Updates docs/changelog.md and any documentation files the change touched.
   Reads the code summary from the Code agent. Does not touch source code.
 tools:
-  - read_file
-  - edit_file
+  - read
+  - edit/createFile
+  - edit/editFiles
   - search/codebase
 ---
 

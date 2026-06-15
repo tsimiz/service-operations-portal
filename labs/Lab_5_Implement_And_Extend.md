@@ -10,6 +10,8 @@ In the morning, the Code agent implemented the plan step by step, and Default Ap
 
 Then you extend the feature. A written compliance requirement arrives (REG-01, an append-only audit trail), and you make the change satisfy it and prove that it did. This is the Topcon-relevant moment of the day: where traceability stops being a slide and becomes a trail you can point at, from the written requirement, through the spec and the code, to the test.
 
+You are building on the Asset API you generated in Lab 3 (Exercise 3.0), not from nothing. Service Notes attach to assets, so your plan implements against that existing Asset API. If you do not see the Asset classes under src/main, generate them first with the Lab 3 setup prompt, then implement the notes.
+
 Learning objectives
 
 By the end of this lab, you can:
