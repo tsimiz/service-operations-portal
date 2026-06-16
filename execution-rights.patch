@@ -1,0 +1,15 @@
+diff --git a/check-setup.sh b/check-setup.sh
+old mode 100644
+new mode 100755
+diff --git a/make-fallback.sh b/make-fallback.sh
+old mode 100644
+new mode 100755
+diff --git a/mvnw b/mvnw
+old mode 100644
+new mode 100755
+diff --git a/prep-demo-folders.sh b/prep-demo-folders.sh
+old mode 100644
+new mode 100755
+diff --git a/reset-demo.sh b/reset-demo.sh
+old mode 100644
+new mode 100755
