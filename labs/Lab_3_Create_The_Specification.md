@@ -61,17 +61,17 @@ Exercise 3.0 — Set up the Asset API (the foundation your notes attach to)
 
 Time: 13:00–13:06
 
-The Service Notes feature attaches notes to assets, so the Asset API has to exist before you can build the notes on top of it. You generate it now, with the same prompt the morning's Demo 3.1 used. This is one-time setup; the rest of the lab is the specification work.
+The Service Notes feature attaches notes to assets, so the Asset API has to exist before you can build the notes on top of it. You generate it now in Agent mode, with the same prompt the morning's Demo 3.1 used. This is one-time setup to get the foundation in place. The real work of this lab, writing the specification, starts in Exercise 3.1, where you switch to Ask mode.
 
 Step 3.0.1 — Switch to Agent mode
 
-In the Copilot Chat panel, select Agent mode and confirm Default Approvals is on (the toggle at the bottom of the panel). Agent mode can create and edit files; Default Approvals means each write waits for your yes, so you stay in control.
+In the Copilot Chat panel, select Agent mode and confirm Default Approvals is on (the toggle at the bottom of the panel). You use Agent mode here for one reason: generating the Asset API means creating and editing files, and only Agent mode can do that. Default Approvals means each write waits for your yes, so you stay in control. This is just to lay the foundation. You switch to Ask mode for the spec work in 3.1, and Agent mode gets its proper treatment in Lab 5.
 
 Step 3.0.2 — Generate the Asset API
 
-Give Copilot this prompt:
+Give Copilot this prompt (the same one Demo 3.1 used):
 
-    Implement the Asset API described in docs/demo-material/requirements-asset.md. Follow the repository conventions: production code only (domain model, repository, controller, error handling) and the unit tests. Work in small steps.
+> Implement the Asset API described in docs/demo-material/requirements-asset.md. Follow the repository conventions: production code only (domain model, repository, controller, error handling) and the unit tests. Work in small steps.
 
 Approve the changes as they come. This creates the Asset domain model, the in-memory repository, the controller with its error handling, and the unit tests.
 
