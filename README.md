@@ -93,7 +93,7 @@ Two things the checker is deliberately lenient about, because they vary by versi
 UI tests use Playwright for Java and are excluded from the default build, so the project stays green without browsers. To enable them, install the Chromium browser once (a one-time download) and run with the profile:
 
 ```bash
-mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium"
+mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium" -Dexec.classpathScope=test
 mvn verify -Pui-tests
 ```
 
